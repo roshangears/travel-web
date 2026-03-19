@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeeSrilankaTravel | Discover the Beauty of Sri Lanka</title>
+    <meta name="description" content="Explore Sri Lanka like never before with SeeSrilankaTravel. Customized tour packages, breathtaking destinations, and unforgettable experiences.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        tropical: {
+                            blue: '#006994',
+                            teal: '#008B8B',
+                            sand: '#F4E4C1',
+                            coral: '#FF6B6B',
+                            green: '#2E8B57',
+                            dark: '#1a1a1a'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #006994;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #004d70;
+        }
+
+        /* Hero Video Background */
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Gallery Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Masonry Grid */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Card Hover Effects */
+        .destination-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Navigation Active State */
+        .nav-link.active {
+            color: #FF6B6B;
+            position: relative;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #FF6B6B;
+        }
+
+        /* Loading Animation */
+        .loader {
+            border-top-color: #FF6B6B;
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Parallax */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Filter Buttons */
+        .filter-btn.active {
+            background-color: #006994;
+            color: white;
+        }
+
+        /* Review Stars */
+        .star-rating {
+            color: #FFD700;
+        }
+
+        /* Smooth Page Transitions */
+        .page-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .page-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent text-white py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#" class="text-2xl font-serif font-bold flex items-center gap-2" onclick="showPage('home')">
+                <i class="fas fa-palm-tree text-tropical-coral"></i>
+                <span>SeeSrilankaTravel</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" onclick="showPage('home')" class="nav-link active hover:text-tropical-coral transition-colors">Home</a>
+                <a href="#" onclick="showPage('destinations')" class="nav-link hover:text-tropical-coral transition-colors">Destinations</a>
+                <a href="#" onclick="showPage('tours')" class="nav-link hover:text-tropical-coral transition-colors">Tour Packages</a>
+                <a href="#" onclick="showPage('gallery')" class="nav-link hover:text-tropical-coral transition-colors">Gallery</a>
+                <a href="#" onclick="showPage('reviews')" class="nav-link hover:text-tropical-coral transition-colors">Reviews</a>
+                <a href="#" onclick="showPage('about')" class="nav-link hover:text-tropical-coral transition-colors">About</a>
+                <a href="#" onclick="showPage('contact')" class="nav-link hover:text-tropical-coral transition-colors">Contact</a>
+                <button onclick="showBookingModal()" class="bg-tropical-coral hover:bg-red-500 text-white px-6 py-2 rounded-full font-semibold transition-all transform hover:scale-105">
+                    Book Now
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-2xl focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-dark absolute top-full left-0 w-full py-4 px-6">
+            <div class="flex flex-col space-y-4">
+                <a href="#" onclick="showPage('home'); toggleMobileMenu()" class="hover:text-tropical-coral">Home</a>
+                <a href="#" onclick="showPage('destinations'); toggleMobileMenu()" class="hover:text-tropical-coral">Destinations</a>
+                <a href="#" onclick="showPage('tours'); toggleMobileMenu()" class="hover:text-tropical-coral">Tour Packages</a>
+                <a href="#" onclick="showPage('gallery'); toggleMobileMenu()" class="hover:text-tropical-coral">Gallery</a>
+                <a href="#" onclick="showPage('reviews'); toggleMobileMenu()" class="hover:text-tropical-coral">Reviews</a>
+                <a href="#" onclick="showPage('about'); toggleMobileMenu()" class="hover:text-tropical-coral">About</a>
+                <a href="#" onclick="showPage('contact'); toggleMobileMenu()" class="hover:text-tropical-coral">Contact</a>
+                <button onclick="showBookingModal(); toggleMobileMenu()" class="bg-tropical-coral text-white px-6 py-2 rounded-full font-semibold w-full">
+                    Book Now
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Sections -->
+
+    <!-- HOME PAGE -->
+    <section id="home" class="page-section visible min-h-screen">
+        <!-- Hero Section with Video Background -->
+        <div class="relative h-screen flex items-center justify-center overflow-hidden">
+            <!-- Video Background -->
+            <div class="absolute inset-0 bg-black">
+                <img src="https://kimi-web-img.moonshot.cn/img/www.honeymoonguidesrilanka.com/2a6e7284bc9760c7ab0dee808ca3686e1da194fc.jpg" 
+                     alt="Sri Lanka Beach" 
+                     class="hero-video opacity-60">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
+            </div>
+
+            <!-- Hero Content -->
+            <div class="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight animate-fade-in-up">
+                    Discover the Beauty of<br>
+                    <span class="text-tropical-coral">Sri Lanka</span>
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 font-light opacity-90 max-w-2xl mx-auto">
+                    Experience paradise with SeeSrilankaTravel. From golden beaches to misty mountains, create memories that last a lifetime.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="showPage('destinations')" class="bg-tropical-coral hover:bg-red-500 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+                        Explore Destinations
+                    </button>
+                    <button onclick="showBookingModal()" class="glass hover:bg-white/20 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all border-2 border-white/30">
+                        Book Your Journey
+                    </button>
+                </div>
+                
+                <!-- Scroll Indicator -->
+                <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                    <i class="fas fa-chevron-down text-3xl opacity-70"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Destinations -->
+        <div class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Featured Destinations</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Explore the most breathtaking locations across Sri Lanka, from pristine beaches to ancient cultural sites.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Beach Card -->
+                    <div class="destination-card group cursor-pointer" onclick="showPage('destinations')">
+                        <div class="relative overflow-hidden rounded-2xl h-80">
+                            <img src="https://kimi-web-img.moonshot.cn/img/cdn.getyourguide.com/fc9cd1262c8a0e7e585ee98049279893db458d54.jpg" 
+                                 alt="Mirissa Beach" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <h3 class="text-2xl font-serif font-bold mb-2">Mirissa Beach</h3>
+                                <p class="text-sm opacity-90">Golden sands & whale watching</p>
+                            </div>
+                            <div class="absolute top-4 right-4 bg-tropical-coral text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                Popular
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hill Country Card -->
+                    <div class="destination-card group cursor-pointer" onclick="showPage('destinations')">
+                        <div class="relative overflow-hidden rounded-2xl h-80">
+                            <img src="https://kimi-web-img.moonshot.cn/img/theportuguesetraveler.com/505cbcb8e1a35e9f0cbc2be5d69f5aa79b22a64d.jpg" 
+                                 alt="Ella Nine Arch Bridge" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <h3 class="text-2xl font-serif font-bold mb-2">Ella</h3>
+                                <p class="text-sm opacity-90">Misty mountains & tea estates</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wildlife Card -->
+                    <div class="destination-card group cursor-pointer" onclick="showPage('destinations')">
+                        <div class="relative overflow-hidden rounded-2xl h-80">
+                            <img src="https://kimi-web-img.moonshot.cn/img/www.atlasandboots.com/7d051795cfcc87a8b3e44cf4079cc26fbda76818.jpg" 
+                                 alt="Yala Leopard" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <h3 class="text-2xl font-serif font-bold mb-2">Yala National Park</h3>
+                                <p class="text-sm opacity-90">Leopard safaris & wildlife</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cultural Card -->
+                    <div class="destination-card group cursor-pointer" onclick="showPage('destinations')">
+                        <div class="relative overflow-hidden rounded-2xl h-80">
+                            <img src="https://kimi-web-img.moonshot.cn/img/d1bv4heaa2n05k.cloudfront.net/20cd43d1e167a12db3ca7a7894a65f84e474bc95.jpeg" 
+                                 alt="Sigiriya Rock" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                            <div class="absolute bottom-6 left-6 text-white">
+                                <h3 class="text-2xl font-serif font-bold mb-2">Sigiriya</h3>
+                                <p class="text-sm opacity-90">Ancient fortress & frescoes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Tour Packages Preview -->
+        <div class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Popular Tour Packages</h2>
+                        <p class="text-gray-600">Curated experiences for every type of traveler</p>
+                    </div>
+                    <button onclick="showPage('tours')" class="hidden md:block text-tropical-blue hover:text-tropical-coral font-semibold transition-colors">
+                        View All Packages <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Package 1 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative h-56">
+                            <img src="https://kimi-web-img.moonshot.cn/img/flyingravana.eme-devops.com/991c4981e0265d9ae93ecde7c171f9309eb2b8ae.jpg" 
+                                 alt="Classic Sri Lanka" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-tropical-blue">
+                                7 Days
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold mb-2">Classic Sri Lanka</h3>
+                            <p class="text-gray-600 text-sm mb-4">Cultural triangle, Kandy, and beaches</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-2xl font-bold text-tropical-coral">$899</span>
+                                <span class="text-gray-500 text-sm">per person</span>
+                            </div>
+                            <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Hotels & Transport</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>English Guide</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Meals Included</li>
+                            </ul>
+                            <button onclick="showBookingModal('Classic Sri Lanka')" class="w-full bg-tropical-blue hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Package 2 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative h-56">
+                            <img src="https://kimi-web-img.moonshot.cn/img/simpsonsforest.com/f51574a1461a4fda8bd827f13cb3d95f4a6e01fe.jpg" 
+                                 alt="Cultural Heritage" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-tropical-blue">
+                                5 Days
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold mb-2">Cultural Heritage</h3>
+                            <p class="text-gray-600 text-sm mb-4">Ancient cities and sacred temples</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-2xl font-bold text-tropical-coral">$699</span>
+                                <span class="text-gray-500 text-sm">per person</span>
+                            </div>
+                            <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Luxury Accommodation</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Private Vehicle</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Entrance Fees</li>
+                            </ul>
+                            <button onclick="showBookingModal('Cultural Heritage')" class="w-full bg-tropical-blue hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Package 3 -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="relative h-56">
+                            <img src="https://kimi-web-img.moonshot.cn/img/media-cdn.tripadvisor.com/fc942eff479986d4a3b79ffdebf3c9419d4c7abb.jpg" 
+                                 alt="Wildlife Safari" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-tropical-blue">
+                                4 Days
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-serif font-bold mb-2">Wildlife Safari</h3>
+                            <p class="text-gray-600 text-sm mb-4">Yala & Udawalawe national parks</p>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-2xl font-bold text-tropical-coral">$549</span>
+                                <span class="text-gray-500 text-sm">per person</span>
+                            </div>
+                            <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Jeep Safaris</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Expert Naturalist</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>All Meals</li>
+                            </ul>
+                            <button onclick="showBookingModal('Wildlife Safari')" class="w-full bg-tropical-blue hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center md:hidden">
+                    <button onclick="showPage('tours')" class="text-tropical-blue hover:text-tropical-coral font-semibold">
+                        View All Packages <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Preview -->
+        <div class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Gallery Preview</h2>
+                    <p class="text-gray-600">Glimpses of paradise waiting for you</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="relative group overflow-hidden rounded-xl cursor-pointer" onclick="showPage('gallery')">
+                        <img src="https://kimi-web-img.moonshot.cn/img/static.vecteezy.com/524481f2590ce9e215d2db4d6d8f4d61db9fc06f.jpg" 
+                             alt="Beach Sunset" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fas fa-expand text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="relative group overflow-hidden rounded-xl cursor-pointer" onclick="showPage('gallery')">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.qantas.com/299dc76118164ab64d508730ba6a26aa9b117992.jpg" 
+                             alt="Leopard" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fas fa-expand text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="relative group overflow-hidden rounded-xl cursor-pointer" onclick="showPage('gallery')">
+                        <img src="https://kimi-web-img.moonshot.cn/img/simpsonsforest.com/f51574a1461a4fda8bd827f13cb3d95f4a6e01fe.jpg" 
+                             alt="Temple" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fas fa-expand text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <div class="relative group overflow-hidden rounded-xl cursor-pointer" onclick="showPage('gallery')">
+                        <img src="https://kimi-web-img.moonshot.cn/img/d1bv4heaa2n05k.cloudfront.net/20cd43d1e167a12db3ca7a7894a65f84e474bc95.jpeg" 
+                             alt="Sigiriya" 
+                             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fas fa-expand text-white text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button onclick="showPage('gallery')" class="inline-flex items-center gap-2 text-tropical-blue hover:text-tropical-coral font-semibold transition-colors">
+                        View Full Gallery <i class="fas fa-images"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials Slider -->
+        <div class="py-20 bg-tropical-blue text-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <i class="fas fa-quote-right text-9xl absolute top-10 left-10"></i>
+                <i class="fas fa-quote-left text-9xl absolute bottom-10 right-10"></i>
+            </div>
+            
+            <div class="container mx-auto px-6 relative z-10">
+                <h2 class="text-4xl font-serif font-bold text-center mb-12">What Travelers Say</h2>
+                
+                <div class="max-w-4xl mx-auto">
+                    <div id="testimonial-slider" class="relative">
+                        <!-- Testimonial 1 -->
+                        <div class="testimonial-slide text-center">
+                            <div class="flex justify-center mb-6">
+                                <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center text-3xl">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div class="star-rating text-2xl mb-4">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-xl italic mb-6">"Amazing experience! Everything was perfectly organized. Sri Lanka is beautiful and SeeSrilankaTravel made it unforgettable!"</p>
+                            <p class="font-semibold">John Anderson</p>
+                            <p class="text-white/70">United Kingdom</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center gap-4 mt-8">
+                        <button onclick="prevTestimonial()" class="w-12 h-12 rounded-full border-2 border-white/30 hover:bg-white/20 flex items-center justify-center transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button onclick="nextTestimonial()" class="w-12 h-12 rounded-full border-2 border-white/30 hover:bg-white/20 flex items-center justify-center transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="py-20 bg-gradient-to-r from-tropical-coral to-red-500 text-white text-center">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold mb-6">Ready to Explore Sri Lanka?</h2>
+                <p class="text-xl mb-8 opacity-90">Book your dream vacation today and get 10% off on early bookings!</p>
+                <button onclick="showBookingModal()" class="bg-white text-tropical-coral hover:bg-gray-100 px-10 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl">
+                    Start Your Journey
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESTINATIONS PAGE -->
+    <section id="destinations" class="page-section hidden pt-24 pb-20 min-h-screen bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-serif font-bold text-gray-900 mb-4">Explore Destinations</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover the diverse landscapes and rich culture of Sri Lanka</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterDestinations('all')" class="filter-btn active px-6 py-2 rounded-full border-2 border-tropical-blue text-tropical-blue hover:bg-tropical-blue hover:text-white transition-all">All</button>
+                <button onclick="filterDestinations('beaches')" class="filter-btn px-6 py-2 rounded-full border-2 border-tropical-blue text-tropical-blue hover:bg-tropical-blue hover:text-white transition-all">Beaches</button>
+                <button onclick="filterDestinations('hill')" class="filter-btn px-6 py-2 rounded-full border-2 border-tropical-blue text-tropical-blue hover:bg-tropical-blue hover:text-white transition-all">Hill Country</button>
+                <button onclick="filterDestinations('wildlife')" class="filter-btn px-6 py-2 rounded-full border-2 border-tropical-blue text-tropical-blue hover:bg-tropical-blue hover:text-white transition-all">Wildlife</button>
+                <button onclick="filterDestinations('cultural')" class="filter-btn px-6 py-2 rounded-full border-2 border-tropical-blue text-tropical-blue hover:bg-tropical-blue hover:text-white transition-all">Cultural</button>
+            </div>
+
+            <!-- Destinations Grid -->
+            <div id="destinations-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Beach: Mirissa -->
+                <div class="destination-item beaches bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/cdn.getyourguide.com/fc9cd1262c8a0e7e585ee98049279893db458d54.jpg" 
+                             alt="Mirissa Beach" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Beach</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Mirissa</h3>
+                        <p class="text-gray-600 mb-4">Famous for whale watching, surfing, and stunning sunsets. A tropical paradise with golden sands.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-water text-blue-500 mr-2"></i>Whale Watching</li>
+                            <li><i class="fas fa-umbrella-beach text-yellow-500 mr-2"></i>Surfing</li>
+                            <li><i class="fas fa-sun text-orange-500 mr-2"></i>Sunset Views</li>
+                        </ul>
+                        <button onclick="showBookingModal('Mirissa Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Beach: Unawatuna -->
+                <div class="destination-item beaches bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.honeymoonguidesrilanka.com/2a6e7284bc9760c7ab0dee808ca3686e1da194fc.jpg" 
+                             alt="Unawatuna Beach" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Beach</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Unawatuna</h3>
+                        <p class="text-gray-600 mb-4">Crescent-shaped beach with calm waters, perfect for swimming and snorkeling.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-swimmer text-blue-500 mr-2"></i>Snorkeling</li>
+                            <li><i class="fas fa-tree text-green-500 mr-2"></i>Jungle Beach</li>
+                            <li><i class="fas fa-utensils text-red-500 mr-2"></i>Seafood Dining</li>
+                        </ul>
+                        <button onclick="showBookingModal('Unawatuna Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Hill: Ella -->
+                <div class="destination-item hill bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/theportuguesetraveler.com/505cbcb8e1a35e9f0cbc2be5d69f5aa79b22a64d.jpg" 
+                             alt="Ella Nine Arch Bridge" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">Hill Country</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Ella</h3>
+                        <p class="text-gray-600 mb-4">Scenic mountain village famous for the Nine Arch Bridge, tea plantations, and hiking trails.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-bridge text-gray-600 mr-2"></i>Nine Arch Bridge</li>
+                            <li><i class="fas fa-mountain text-green-600 mr-2"></i>Little Adam's Peak</li>
+                            <li><i class="fas fa-leaf text-green-500 mr-2"></i>Tea Factories</li>
+                        </ul>
+                        <button onclick="showBookingModal('Ella Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Hill: Nuwara Eliya -->
+                <div class="destination-item hill bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/flyingravana.eme-devops.com/991c4981e0265d9ae93ecde7c171f9309eb2b8ae.jpg" 
+                             alt="Nuwara Eliya" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">Hill Country</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Nuwara Eliya</h3>
+                        <p class="text-gray-600 mb-4">"Little England" with colonial architecture, cool climate, and lush tea estates.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-home text-brown-500 mr-2"></i>Colonial Hotels</li>
+                            <li><i class="fas fa-golf-ball text-green-500 mr-2"></i>Golf Course</li>
+                            <li><i class="fas fa-water text-blue-500 mr-2"></i>Gregory Lake</li>
+                        </ul>
+                        <button onclick="showBookingModal('Nuwara Eliya Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Wildlife: Yala -->
+                <div class="destination-item wildlife bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.atlasandboots.com/7d051795cfcc87a8b3e44cf4079cc26fbda76818.jpg" 
+                             alt="Yala National Park" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm">Wildlife</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Yala National Park</h3>
+                        <p class="text-gray-600 mb-4">Home to the highest leopard density in the world, elephants, and diverse birdlife.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-paw text-orange-600 mr-2"></i>Leopard Safari</li>
+                            <li><i class="fas fa-elephant text-gray-600 mr-2"></i>Elephant Herds</li>
+                            <li><i class="fas fa-dove text-blue-400 mr-2"></i>Bird Watching</li>
+                        </ul>
+                        <button onclick="showBookingModal('Yala Safari')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Wildlife: Udawalawe -->
+                <div class="destination-item wildlife bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/media-cdn.tripadvisor.com/fc942eff479986d4a3b79ffdebf3c9419d4c7abb.jpg" 
+                             alt="Udawalawe" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm">Wildlife</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Udawalawe</h3>
+                        <p class="text-gray-600 mb-4">Guaranteed elephant sightings and the famous Elephant Transit Home.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-elephant text-gray-600 mr-2"></i>Elephant Transit Home</li>
+                            <li><i class="fas fa-binoculars text-green-600 mr-2"></i>Safari Drives</li>
+                            <li><i class="fas fa-camera text-purple-500 mr-2"></i>Photography</li>
+                        </ul>
+                        <button onclick="showBookingModal('Udawalawe Safari')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Cultural: Kandy -->
+                <div class="destination-item cultural bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/simpsonsforest.com/f51574a1461a4fda8bd827f13cb3d95f4a6e01fe.jpg" 
+                             alt="Kandy Temple of the Tooth" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm">Cultural</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Kandy</h3>
+                        <p class="text-gray-600 mb-4">Sacred city home to the Temple of the Tooth Relic and the Esala Perahera festival.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-place-of-worship text-gold mr-2"></i>Temple of the Tooth</li>
+                            <li><i class="fas fa-tree text-green-500 mr-2"></i>Botanical Gardens</li>
+                            <li><i class="fas fa-music text-purple-500 mr-2"></i>Traditional Dance</li>
+                        </ul>
+                        <button onclick="showBookingModal('Kandy Cultural Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Cultural: Sigiriya -->
+                <div class="destination-item cultural bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/d1bv4heaa2n05k.cloudfront.net/20cd43d1e167a12db3ca7a7894a65f84e474bc95.jpeg" 
+                             alt="Sigiriya Rock Fortress" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm">Cultural</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Sigiriya</h3>
+                        <p class="text-gray-600 mb-4">Ancient rock fortress with stunning frescoes and panoramic views from the summit.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-mountain text-brown-600 mr-2"></i>Rock Fortress</li>
+                            <li><i class="fas fa-paint-brush text-pink-500 mr-2"></i>Ancient Frescoes</li>
+                            <li><i class="fas fa-water text-blue-500 mr-2"></i>Mirror Wall</li>
+                        </ul>
+                        <button onclick="showBookingModal('Sigiriya Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+
+                <!-- Cultural: Anuradhapura -->
+                <div class="destination-item cultural bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                    <div class="relative h-64">
+                        <img src="https://kimi-web-img.moonshot.cn/img/www.qantas.com/299dc76118164ab64d508730ba6a26aa9b117992.jpg" 
+                             alt="Anuradhapura" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-purple-500 text-white px-3 py-1 rounded-full text-sm">Cultural</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-serif font-bold mb-2">Anuradhapura</h3>
+                        <p class="text-gray-600 mb-4">Ancient capital with sacred Bodhi tree and massive dagobas.</p>
+                        <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                            <li><i class="fas fa-tree text-green-600 mr-2"></i>Sri Maha Bodhi</li>
+                            <li><i class="fas fa-circle text-white mr-2"></i>Ruwanwelisaya</li>
+                            <li><i class="fas fa-bicycle text-blue-500 mr-2"></i>Sacred City Tour</li>
+                        </ul>
+                        <button onclick="showBookingModal('Anuradhapura Tour')" class="w-full bg-tropical-blue text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">Explore Tour</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOUR PACKAGES PAGE -->
+    <section id="tours" class="page-section hidden pt-24 pb-20 min-h-screen bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-serif font-bold text-gray-900 mb-4">Tour Packages</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Choose from our carefully curated experiences</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg mb-12 max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" id="tour-search" placeholder="Search tours..." 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-tropical-blue"
+                               onkeyup="searchTours()">
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="duration-filter" onchange="filterTours()" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-tropical-blue">
+                            <option value="all">All Durations</option>
+                            <option value="short">1-3 Days</option>
+                            <option value="medium">4-7 Days</option>
+                            <option value="long">8+ Days</option>
+                        </select>
+                        <select id="price-filter" onchange="filterTours()" class="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-tropical-blue">
+                            <option value="all">All Prices</option>
+                            <option value="budget">Under $500</option>
+                            <option value="standard">$500-$1000</option>
+                            <option value="luxury">$1000+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packages Grid -->
+            <div id="tours-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Package 1 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="899" data-duration="7">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/flyingravana.eme-devops.com/991c4981e0265d9ae93ecde7c171f9309eb2b8ae.jpg" 
+                             alt="Classic Sri Lanka" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-tropical-coral text-white px-3 py-1 rounded-full text-sm font-bold">Best Seller</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Classic Sri Lanka</h3>
+                        <p class="text-gray-600 text-sm mb-4">Cultural triangle, Kandy, and south coast beaches</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 7 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 12</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>4-Star Hotels</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Private A/C Vehicle</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>English Speaking Guide</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Entrance Fees</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Daily Breakfast</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$899</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Classic Sri Lanka')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 2 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="699" data-duration="5">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/simpsonsforest.com/f51574a1461a4fda8bd827f13cb3d95f4a6e01fe.jpg" 
+                             alt="Cultural Heritage" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Cultural Heritage</h3>
+                        <p class="text-gray-600 text-sm mb-4">Ancient cities, temples, and historical sites</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 5 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 8</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Boutique Hotels</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Private Vehicle</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Expert Historian Guide</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Meals</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$699</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Cultural Heritage')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 3 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="549" data-duration="4">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/media-cdn.tripadvisor.com/fc942eff479986d4a3b79ffdebf3c9419d4c7abb.jpg" 
+                             alt="Wildlife Safari" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Wildlife Safari</h3>
+                        <p class="text-gray-600 text-sm mb-4">Yala and Udawalawe national parks</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 4 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 6</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Safari Lodges</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>4x4 Jeep Safaris</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Naturalist Guide</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Meals</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$549</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Wildlife Safari')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 4 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="1299" data-duration="10">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/theportuguesetraveler.com/505cbcb8e1a35e9f0cbc2be5d69f5aa79b22a64d.jpg" 
+                             alt="Complete Island" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-bold">Premium</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Complete Island</h3>
+                        <p class="text-gray-600 text-sm mb-4">Comprehensive tour covering all major attractions</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 10 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 10</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>5-Star Hotels</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Private Driver</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Activities</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Full Board</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$1,299</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Complete Island')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 5 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="449" data-duration="3">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/cdn.getyourguide.com/fc9cd1262c8a0e7e585ee98049279893db458d54.jpg" 
+                             alt="Beach Escape" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Beach Escape</h3>
+                        <p class="text-gray-600 text-sm mb-4">Relaxation on Sri Lanka's best beaches</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 3 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 4</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Beach Resorts</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Whale Watching</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Water Sports</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Breakfast</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$449</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Beach Escape')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 6 -->
+                <div class="tour-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all" data-price="799" data-duration="6">
+                    <div class="relative h-56">
+                        <img src="https://kimi-web-img.moonshot.cn/img/d1bv4heaa2n05k.cloudfront.net/20cd43d1e167a12db3ca7a7894a65f84e474bc95.jpeg" 
+                             alt="Adventure Trek" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-serif font-bold mb-2">Adventure Trek</h3>
+                        <p class="text-gray-600 text-sm mb-4">Hiking, climbing, and outdoor adventures</p>
+                        <div class="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                            <span><i class="far fa-clock mr-1"></i> 6 Days</span>
+                            <span><i class="fas fa-user-friends mr-1"></i> Max 8</span>
+                        </div>
+                        <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Eco Lodges</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Professional Guides</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Equipment Provided</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>All Meals</li>
+                        </ul>
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <div>
+                                <span class="text-3xl font-bold text-tropical-coral">$799</span>
+                                <span class="text-gray-500 text-sm">/person</span>
+                            </div>
+                            <button onclick="showBookingModal('Adventure Trek')" class="bg-tropical-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY PAGE -->
+    <section id="gallery" class="page-section hidden pt-24 pb-20 min-h-screen bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-serif font-bold text-white mb-4">Photo Gallery</h1>
+                <p class="text-gray-400 max-w-2xl mx-auto">Experience the beauty of Sri Lanka through our lens</p>
+            </div>
+
+            <!-- Gallery Filters -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterGallery('all')" class="gallery-filter active px-6 py-2 rounded-full bg-white/10 text-white hover:bg-tropical-coral transition-all border border-white/20">All</button>
+                <button onclick="filterGallery('beaches')" class="gallery-filter px-6 py-2 rounded-full bg-white/10 text-white hover:bg-tropical-coral transition-all border border-white/20">Beaches</button>
+                <button onclick="filterGallery('mountains')" class="gallery-filter px-6 py-2 rounded-full bg-white/10 text-white hover:bg-tropical-coral transition-all border border-white/20">Mountains</button>
+                <button onclick="filterGallery('wildlife')" class="gallery-filter px-6 py-2 rounded-full bg-white/10 text-white hover:bg-tropical-coral transition-all border border-white/20">Wildlife</button>
+                <button onclick="filterGallery('culture')" class="gallery-filter px-6 py-2 rounded-full bg-white/10 text-white hover:bg-tropical-coral transition-all border border-white/20">Culture</button>
+            </div>
+
+            <!-- Masonry Gallery -->
+            <div class="masonry-grid" id="gallery-grid">
+                <!-- Beach Images -->
+                <div class="gallery-item beaches masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.honeymoonguidesrilanka.com/2a6e7284bc9760c7ab0dee808ca3686e1da194fc.jpg" 
+                         alt="Mirissa Sunset" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Mirissa Beach - Perfect sunset views">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item beaches masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/static.vecteezy.com/524481f2590ce9e215d2db4d6d8f4d61db9fc06f.jpg" 
+                         alt="Unawatuna" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Unawatuna Beach - Golden sands">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Mountain Images -->
+                <div class="gallery-item mountains masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/theportuguesetraveler.com/505cbcb8e1a35e9f0cbc2be5d69f5aa79b22a64d.jpg" 
+                         alt="Nine Arch Bridge" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Nine Arch Bridge - Ella">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item mountains masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/flyingravana.eme-devops.com/991c4981e0265d9ae93ecde7c171f9309eb2b8ae.jpg" 
+                         alt="Nuwara Eliya" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Nuwara Eliya - Tea Country">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Wildlife Images -->
+                <div class="gallery-item wildlife masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.atlasandboots.com/7d051795cfcc87a8b3e44cf4079cc26fbda76818.jpg" 
+                         alt="Leopard in Tree" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Leopard resting - Yala National Park">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item wildlife masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.qantas.com/299dc76118164ab64d508730ba6a26aa9b117992.jpg" 
+                         alt="Leopard Walking" 
+                         class="w-full rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]"
+                         data-caption="Leopard on the prowl - Yala">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                        <i class="fas fa-search-plus text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item wildlife masonry-item relative group cursor-pointer" onclick="openLightbox(this)">
+                    <img src="https://kimi-web-img.moonshot.cn/img/media-cdn.tripadvisor.com/fc942eff479986d4a
